@@ -2,6 +2,7 @@
   (* x x))
 
 ; return 0 if x**2 % m = 1 for nontrivial x (x != 1 and x != m-1); else return x**2
+; basically a number is not a prime if there's such a nontrivial root of 1 modulo n
 (define (sgmod x m)
   (let ((squared (square x)))
     (cond (
