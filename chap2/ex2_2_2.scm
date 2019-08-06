@@ -124,3 +124,14 @@
 )
 
 (define t1 (list 1 (list 2 (list 3 4) 5) (list 6 7)))
+
+; 2.32
+(define nil '())
+
+(define (subsets s)
+  (if (null? s)
+    (list nil)
+    (let ((rest (subsets (cdr s))))
+      (append rest (map (lambda (l) (cons (car s) l)) rest)))
+  )
+)
