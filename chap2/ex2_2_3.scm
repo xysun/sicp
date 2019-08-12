@@ -154,3 +154,75 @@
    (triple-pairs n)
   )
 )
+
+; 
+; represent each position as a list of 2 elements, (row, col)
+; represent a solution as a list of positions, eg. [(row1, col1), ..., (row8, col8)]
+
+(define empty-board nil)
+
+(define (adjoin-position new-row k rest-of-queens)
+  (cons (list new-row k) rest-of-queens)
+)
+
+
+
+(define (safe-pair p1 p2)
+  (define (not-safe p1 p2)
+  ; not on same row, same col or diagnal
+  (let ((r1 (car p1)) (c1 (cadr p1)) (r2 (car p2)) (c2 (cadr p2)))
+    (
+      or
+      (= r1 r2)
+      (= c1 c2)
+      (= 1 (abs (- r1 r2)) (abs (- c1 c2))) ; diagnal
+    ))
+  )
+  (not (not-safe p1 p2))  
+)
+
+(define (all proc seq)
+  (if (null? seq)
+    #t
+    (if (proc (car seq))
+      (all proc (cdr seq))
+      #f)
+  )
+)
+
+(define (safe? k positions)
+  ; find the position at kth column, check it against all the others
+  ; (display k)
+  ; (display positions)
+
+  (if (null? (cdr positions))
+    #t ; single element
+    (let ((p (filter (lambda (position) (= k (cadr position))) positions)))
+      (all 
+        (lambda (position) (safe-pair position (car p)))
+        (filter (lambda (position) (not (= k (cadr position)))) positions)
+        )  
+      )
+  )
+)
+
+(define (queens board-size)
+  (define (queen-cols k)
+    ; (display k)
+    (if (= k 0)
+      (list empty-board)
+      (filter
+        (lambda (positions) (safe? k positions))
+        (flatmap
+          (lambda (rest-of-queens) (
+            map 
+            (lambda (new-row) (adjoin-position new-row k rest-of-queens))
+            (enumerate-interval 1 board-size)
+          ))
+          (queen-cols (- k 1))
+        )  
+      )
+      )
+    )
+  (queen-cols board-size)
+  )
