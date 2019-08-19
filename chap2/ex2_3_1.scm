@@ -1,0 +1,21 @@
+(define (memq item x)
+  (cond ((null? x) #f)
+    ((eq? item (car x)) x)
+    (else (memq item (cdr x)))
+    )
+)
+
+; 2.54
+(define (not-pair item)
+  (not (pair? item))
+)
+
+(define (equal? item1 item2)
+  (cond ((and (not-pair item1) (not-pair item2)) (eq? item1 item2))
+    ((and (pair? item1) (pair? item2)) (and (eq? (car item1) (car item2)) (equal? (cdr item1) (cdr item2)) ))
+    (else #f)
+  )
+)
+(display "\nex2.54\n")
+(display (equal? '(this is a list) '(this is a list)))
+(display (equal? '(this is a list) '(this (is a) list)))
